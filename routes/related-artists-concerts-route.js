@@ -4,6 +4,12 @@ const axios = require("axios");
 
 const getLocationFromReq = require("../lib/get-location-from-req.js");
 
+router.post("/yolo", (req, res, next) => {
+  console.log(req.body.lat);
+  const { lat, long } = req.body;
+  return res.status(200).send("ok");
+});
+
 router.get("/similar-artist", (req, res, next) => {
   const url =
     "https://api.spotify.com/v1/me/top/artists?limit=5&time_range=short_term";
@@ -42,6 +48,7 @@ router.get("/similar-artist", (req, res, next) => {
 
         const eventIndex = relatedArtistsName.map(oneQuery => {
           const formattedName = encodeURIComponent(oneQuery);
+
           const url = `https://api.songkick.com/api/3.0/events.json?apikey=${apiKey}&artist_name=${formattedName}&location=geo:48.866667,2.333333`;
 
           return axios.get(url);
