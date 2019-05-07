@@ -12,14 +12,15 @@ router.get("/spotiPlayer", (req, res, next) => {
     response.data.items.forEach(oneArtist => {
       artistIds.push(oneArtist.id);
     });
-    const newRequest = artistIds.map(oneId => {
+    artistIds.map(oneId => {
       axios
         .get(`https://api.spotify.com/v1/artists/${oneId}/related-artists`, {
           headers: { Authorization: accessToken }
         })
         .then(response => {
           res.json(response.data);
-        });
+        })
+        .catch(err => console.log(err));
     });
   });
 });
