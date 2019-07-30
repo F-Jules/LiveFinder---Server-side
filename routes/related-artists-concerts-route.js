@@ -5,7 +5,6 @@ const axios = require("axios");
 const getLocationFromReq = require("../lib/get-location-from-req.js");
 
 router.post("/yolo", (req, res, next) => {
-  console.log(req.body.lat);
   const { lat, long } = req.body;
   return res.status(200).send("ok");
 });
@@ -22,6 +21,7 @@ router.get("/similar-artist", (req, res, next) => {
 
     .then(response => {
       const artistIds = [];
+
       response.data.items.forEach(oneArtist => {
         artistIds.push(oneArtist.id);
       });
@@ -36,8 +36,15 @@ router.get("/similar-artist", (req, res, next) => {
       });
       const relatedArtistsName = [];
       const infoArtists = [];
-
-      Promise.all(allIndex).then(results => {
+      if (allIndex.length === 0) {
+        res.json([]);
+      }
+      Promise.all(
+        allIndex.catch(error => {
+          console.log("ERROR HERE", error);
+          return null;
+        })
+      ).then(results => {
         infoArtists.push(results[0].data);
         results.forEach(oneSimilarName => {
           oneSimilarName.data.artists.map(oneArtistName => {
